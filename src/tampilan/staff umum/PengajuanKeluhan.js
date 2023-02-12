@@ -1,8 +1,8 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useCallback, useEffect, useState } from "react";
 import { Text, TextInput, StyleSheet, TouchableHighlight, Image, View, Linking, ImageBackground } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Firestore, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc, collection, getFirestore, getDocs, query, where, Query, orderBy } from 'firebase/firestore';
+import { Firestore, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc, collection, getFirestore, getDocs, query, where, Query, orderBy, QuerySnapshot } from 'firebase/firestore';
 import db from "../../config/db";
 import { async } from "@firebase/util";
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
@@ -11,129 +11,95 @@ import { firebase } from '../../config/firebase';
 import { FloatingAction } from "react-native-floating-action";
 
 const PengajuanKeluhan = ({ navigation }) => {
-    // getDocs(collection(db, 'keluhan')).then(docSnap => {
-    //     docSnap.forEach((doc) => {
-    //         keluhan.push({ ...doc.data(), id: doc.id })
-    //     });
-    //     console.log("document data:", keluhan);
-    // })
-    let namaStaff;
     let [keluhan, setKeluhan] = useState([]);
     let [dataStaff, setDataStaff] = useState([]);
 
-    const test = (pencarian) => {
-        (async () => {
-            const colRef = query(collection(db, 'keluhan'), where(('idStaffIT', '==', firebase.auth().currentUser.uid, '&&', 'judulKeluhan', '==', pencarian)));
-            const snapshots = await getDocs(colRef);
-
-            const docsKeluhan = snapshots.docs.map((doc) => {
-                const data = doc.data()
-                data.id = doc.id
-                // console.log(data.idStaffUmum);
-                return data;
-            })
-
-            setKeluhan(docsKeluhan);
-        })();
-
-        keluhan.map((item, index) => {
-            console.log(item.idStaffUmum);
-            (async () => {
-                const colRefStaff = query(collection(db, 'staff'), where('idUser', '==', item.idStaffUmum), orderBy('createdDate', 'desc'));
-                const snapshotsStaff = await getDocs(colRefStaff);
-
-                const getDocStaff = snapshotsStaff.docs.map((docStaff) => {
-                    const resultStaff = docStaff.data()
-                    resultStaff.id = docStaff.id;
-                    // console.log(data.idStaffUmum);
-                    return resultStaff;
-                })
-                setDataStaff([...dataStaff, getDocStaff]);
-            })();
-        });
-    }
-
     useEffect(() => {
-        ; (async () => {
-            const colRef = query(collection(db, 'keluhan'), where('idStaffIT', '==', firebase.auth().currentUser.uid));
-            const snapshots = await getDocs(colRef);
-
-            const docsKeluhan = snapshots.docs.map((doc) => {
-                const data = doc.data()
-                data.id = doc.id
-                // console.log(data.idStaffUmum);
-                return data;
-            })
-
+        firebase.firestore().collection('keluhan').where('idStaffUmum', '==', firebase.auth().currentUser.uid).onSnapshot((querySnapshot) => {
+            const docsKeluhan = [];
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                docsKeluhan.push(data);
+            });
             setKeluhan(docsKeluhan);
-        })();
+        }),
+            // ; (async () => {
+            //     const colRef = query(collection(db, 'keluhan'), where('idStaffIT', '==', firebase.auth().currentUser.uid));
+            //     const snapshots = await getDocs(colRef);
 
-        console.log(keluhan);
+            //     const docsKeluhan = snapshots.docs.map((doc) => {
+            //         const data = doc.data()
+            //         data.id = doc.id
+            //         // setKeluhan([...keluhan, data]);
+            //         return data;
+            //     })
+            //     setKeluhan(docsKeluhan);
+            // })();
 
-        keluhan.map((item, index) => {
-            console.log(item.idStaffUmum);
-            (async () => {
-                const colRefStaff = query(collection(db, 'staff'), where('idUser', '==', item.idStaffUmum));
-                const snapshotsStaff = await getDocs(colRefStaff);
+            keluhan.map((item, index) => {
+                console.log(item.idStaffUmum);
+                (async () => {
+                    const colRefStaff = query(collection(db, 'staff'), where('idUser', '==', item.idStaffUmum));
+                    const snapshotsStaff = await getDocs(colRefStaff);
 
-                const getDocStaff = snapshotsStaff.docs.map((docStaff) => {
-                    const resultStaff = docStaff.data()
-                    resultStaff.id = docStaff.id;
-                    // console.log(data.idStaffUmum);
-                    return resultStaff;
-                })
-                setDataStaff([...dataStaff, getDocStaff]);
-                console.log(dataStaff);
-            })();
-        });
+                    const getDocStaff = snapshotsStaff.docs.map((docStaff) => {
+                        const resultStaff = docStaff.data()
+                        resultStaff.id = docStaff.id;
+                        // console.log(data.idStaffUmum);
+                        return resultStaff;
+                    })
+                    setDataStaff([...dataStaff, getDocStaff]);
+                    // console.log(dataStaff);
+                })();
+            });
 
     }, [])
 
 
-
-
     return (
-        <View style={{ height: "100%" }}>
-            {/* <ImageBackground source={require('../../../assets/images/background-login.jpg')} resizeMode="cover" style={[styles.background, { width: '100%', height: '100%' }]}> */}
-            <TextInput style={[styles.search, { borderColor: "#00000", borderWidth: 4, marginBottom: 10, marginTop: 10 }]} placeholder="Search" onChangeText={search => test(search)} />
-            {keluhan.length == 0 ?
+        <View>
+            <ImageBackground source={require('../../../assets/images/background-list.jpg')} resizeMode="cover" style={[styles.background, { width: '100%', height: '100%' }]}>
                 <View>
-                    <Text style={{ textAlign: "center" }}>Data Keluhan Kosong</Text>
-                </View>
-                :
-                <SafeAreaView>
-                    <ScrollView>
-                        {
-                            keluhan.map((item, index) => {
-                                return (
-                                    <>
-                                        <View style={[{ flexDirection: "row", borderColor: "#000000", borderWidth: 1, }]}>
-                                            <TouchableHighlight key={item.id} onPress={() => navigation.navigate('Detail', { data: keluhan[index] })} style={{ width: '80%' }}>
+                    {/* <ImageBackground source={require('../../../assets/images/background-login.jpg')} resizeMode="cover" style={[styles.background, { width: '100%', height: '100%' }]}> */}
+                    <TextInput style={[styles.search, { borderColor: "#00000", borderWidth: 4, marginBottom: 10, marginTop: 10 }]} placeholder="Search" onChangeText={search => test(search)} />
+                    {keluhan.length == 0 ?
+                        <View>
+                            <Text style={{ textAlign: "center" }}>Data Keluhan Kosong</Text>
+                        </View>
+                        :
+                        <ScrollView>
+                            {
+                                keluhan.map((item, index) => {
+                                    return (
+                                        <View key={item.id} style={[styles.listKeluhan, { flexDirection: "row", borderColor: "#000000", borderWidth: 1, }]}>
+                                            <TouchableHighlight onPress={() => navigation.navigate('Detail', { data: keluhan[index] })} style={{ width: '80%' }}>
                                                 <View style={[{ flexDirection: "row", }]}>
-                                                    <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 70, height: 70 }} />
+                                                    <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 50, height: 50, margin: 1 }} />
                                                     <View style={{ flexDirection: "column", marginLeft: 15 }}>
                                                         <Text style={{ fontWeight: "bold" }}>{item.judulKeluhan}</Text>
-                                                        <Text>Status : {item.keluhan}</Text>
+                                                        <Text>{item.keluhan}</Text>
+                                                        <Text>Status : {item.status}</Text>
                                                     </View>
-
                                                 </View>
                                             </TouchableHighlight>
-                                            <TouchableHighlight onPress={() => { Linking.openURL(`tel:${item.noTelpStaffIT}`) }}><FontAwesome name="phone" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight>
-                                            <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
+                                            <View style={[{ flexDirection: "row" }]}>
+                                                <TouchableHighlight onPress={() => { Linking.openURL(`tel:${item.noTelpStaffIT}`) }} style={styles.center}><FontAwesome name="phone" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight>
+                                                <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
+                                            </View>
                                         </View>
-                                    </>
-                                    // <TouchableHighlight key={item.id} onPress={() => navigation.navigate('Detail', { data: keluhan[index] })} style={{ width: '80%' }}>
+                                        // <TouchableHighlight key={item.id} onPress={() => navigation.navigate('Detail', { data: keluhan[index] })} style={{ width: '80%' }}>
 
+                                    )
+                                }
                                 )
                             }
-                            )
-                        }
-                    </ScrollView>
-                </SafeAreaView>
-            }
-            <TouchableHighlight onPress={() => navigation.navigate("BuatKeluhan")} style={[styles.floatButton, styles.positionFloatButton]}>
-                <FontAwesome name="plus" size={30} color="white"></FontAwesome>
-            </TouchableHighlight>
+                        </ScrollView>
+                    }
+                </View>
+                <TouchableHighlight onPress={() => navigation.navigate("BuatKeluhan")} style={[styles.floatButton, styles.positionFloatButton]}>
+                    <FontAwesome name="plus" size={30} color="white"></FontAwesome>
+                </TouchableHighlight>
+            </ImageBackground>
         </View >
     )
 }
@@ -141,6 +107,16 @@ const PengajuanKeluhan = ({ navigation }) => {
 export default PengajuanKeluhan;
 
 const styles = StyleSheet.create({
+    center: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    listKeluhan: {
+        width: "90%",
+        marginLeft: "5%",
+        borderRadius: 8,
+        marginBottom: 4
+    },
     floatButton: {
         width: 70,
         height: 70,

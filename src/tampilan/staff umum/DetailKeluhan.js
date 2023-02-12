@@ -1,33 +1,37 @@
 import react from "react";
-import { SafeAreaView, Image, StyleSheet, View, Text, TouchableHighlight } from "react-native";
+import { SafeAreaView, Image, StyleSheet, View, Text, TouchableHighlight, ImageBackground } from "react-native";
 
 export default function DetailKeluhan({ route, navigation }) {
     // let [dataStaffIT,]
     console.log(route.params.data);
     return (
-        <>
-            <View>
-                <Image source={{ uri: 'https://sekawantriasa.com/wp-content/uploads/2021/08/Esa-Unggul-Tangerang.jpg' }} style={{ width: '100%', height: '45%', top: 0 }} />
-                <View style={[styles.backgroundWhite, styles.container, { marginTop: 20, borderRadius: 23 }]}>
-                    <Text style={[styles.bold, styles.textCenter, { color: "#F23C3C", fontSize: 30, }]}>{route.params.data.judulKeluhan}</Text>
+        <View>
+            <ImageBackground source={require('../../../assets/images/background-detail.jpg')} resizeMode="cover" style={[styles.background, { width: '100%', height: '100%' }]}>
+                <View style={[{ position: "absolute", width: "100%" }]}>
+                    <Image source={{ uri: 'https://sekawantriasa.com/wp-content/uploads/2021/08/Esa-Unggul-Tangerang.jpg' }} style={{ width: '100%', height: '50%', top: 0 }} />
+                    <View style={[styles.backgroundWhite, styles.container, { marginTop: 20, borderRadius: 23 }]}>
+                        <Text style={[styles.bold, styles.textCenter, { color: "#F23C3C", fontSize: 30, padding: 15 }]}>{route.params.data.judulKeluhan}</Text>
+                    </View>
+                    <View style={[styles.backgroundWhite, styles.container, { marginTop: 20, marginBottom: 30 }]}>
+                        <View style={{ padding: 20 }}>
+                            <Text style={[styles.bold, styles.sizeLaporan]}>Detail Laporan</Text>
+                            <Text style={styles.sizeLaporan}>Nama    : Unggul Prayuda</Text>
+                            <Text style={styles.sizeLaporan}>Tanggal : 25-08-2022</Text>
+                            <Text style={styles.sizeLaporan}>Status  : {route.params.data.status}</Text>
+                            <Text style={styles.sizeLaporan}>Keluhan : {route.params.data.keluhan}</Text>
+                        </View>
+                    </View>
+                    <TouchableHighlight style={[styles.button, styles.container, { backgroundColor: "#FE1919", paddingTop: 10, paddingBottom: 10, width: "60%", marginLeft: "20%" }]}><Text style={[styles.textCenter, { fontSize: 22, color: "#ffffff" }]}>Batalkan</Text></TouchableHighlight>
                 </View>
-                <View style={[styles.backgroundWhite, styles.container, { marginTop: 20, marginBottom: 30 }]}>
-                    <Text style={styles.bold}>Detail Laporan</Text>
-                    <Text>Nama    : Unggul Prayuda</Text>
-                    <Text>Tanggal : 25-08-2022</Text>
-                    <Text>Status  : {route.params.data.status}</Text>
-                    <Text>Keluhan : {route.params.data.keluhan}</Text>
-                </View>
-                <View style={[styles.backgroundWhite, { bottom: 0, flexDirection: "row", borderTopLeftRadius: 15, borderTopRightRadius: 15 }]}>
-                    <TouchableHighlight style={[styles.button, { backgroundColor: "#FE1919", marginLeft: '10%' }]}><Text style={[styles.textCenter, { fontSize: 22, color: "#ffffff" }]}>Perbaiki</Text></TouchableHighlight>
-                    <TouchableHighlight style={[styles.button, { backgroundColor: "#948E8E" }]}><Text style={[styles.textCenter, { fontSize: 22, color: "#ffffff" }]}>Tunda</Text></TouchableHighlight>
-                </View>
-            </View>
-        </>
+            </ImageBackground>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    sizeLaporan: {
+        fontSize: 20
+    },
     textCenter: {
         textAlign: "center",
     },
