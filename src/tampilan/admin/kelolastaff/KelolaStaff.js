@@ -8,6 +8,16 @@ import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
 import { firebase } from "../../../config/firebase";
 import db from "../../../config/db";
 
+const deleteStaff = async (email) => {
+    try {
+        const user = await firebase.auth().signInWithEmailAndPassword(email);
+        await user.delete();
+        console.log('user delete successfully');
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 const KelolaStaff = ({ navigation }) => {
     const [staff, setStaff] = useState([]);
     useEffect(() => {
@@ -52,7 +62,7 @@ const KelolaStaff = ({ navigation }) => {
                                         </TouchableHighlight>
                                         <View style={[{ flexDirection: "row" }]}>
                                             <TouchableHighlight onPress={() => navigation.navigate('EditStaff', { data: staff[index] })} style={styles.center}><FontAwesome name="edit" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight>
-                                            <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><MaterialCommunity name="delete-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></MaterialCommunity></TouchableHighlight>
+                                            <TouchableHighlight onPress={deleteStaff(item.email)} style={{ marginLeft: '2%' }}><MaterialCommunity name="delete-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></MaterialCommunity></TouchableHighlight>
                                         </View>
                                     </View>
                                 )

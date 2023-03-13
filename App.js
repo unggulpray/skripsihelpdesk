@@ -12,6 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator, DrawerItem, DrawerItemList } from "@react-navigation/drawer";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import Feather from 'react-native-vector-icons/Feather';
 import Chat from "./src/tampilan/staff umum/Chat";
 import { collection, limit, query, where } from "firebase/firestore";
 import BuatPermintaan from "./src/tampilan/it/BuatPermintaan";
@@ -80,16 +81,20 @@ const App = () => {
               }} />
               <Drawer.Screen name="Management Staff" component={KelolaStaff} options={{
                 headerStyle: {
-                  backgroundColor: "#1AA2DA",
+                  backgroundColor: "#212529",
                 },
                 headerTintColor: "white",
                 drawerIcon: ({ color }) => (
                   <Fontisto name="person" size={22} color={color} />
                 )
               }} />
-              <Drawer.Screen name="TambahStaff" component={TambahStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "blue" }, headerTintColor: "white" }}></Drawer.Screen>
-              <Drawer.Screen name="EditStaff" component={EditStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "blue" }, headerTintColor: "white" }}></Drawer.Screen>
-              <Drawer.Screen name="Management Barang" component={StockBarang} options={{ headerStyle: { backgroundColor: "blue" }, headerTintColor: "white" }}></Drawer.Screen>
+              <Drawer.Screen name="TambahStaff" component={TambahStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
+              <Drawer.Screen name="EditStaff" component={EditStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
+              <Drawer.Screen name="Management Barang" component={StockBarang} options={{
+                headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white", drawerIcon: ({ color }) => (
+                  <Feather name="box" size={22} color={color} />
+                )
+              }}></Drawer.Screen>
             </Drawer.Navigator >
           )
         } else if (item.role == 2) {
@@ -107,22 +112,27 @@ const App = () => {
                   <FontAwesome name="dashboard" size={22} color={color} />
                 )
               }} />
-              <Drawer.Screen name="Management Staff" component={KelolaStaff} options={{
+              <Drawer.Screen name="Reminder Keluhan" component={PengajuanKeluhan} options={{
                 headerStyle: {
-                  backgroundColor: "blue",
+                  backgroundColor: "#212529",
                 },
                 headerTintColor: "white",
                 drawerIcon: ({ color }) => (
-                  <Fontisto name="person" size={22} color={color} />
+                  <FontAwesome name="ticket" size={22} color={color} />
                 )
               }} />
-              <Drawer.Screen name="TambahStaff" component={TambahStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "blue" }, headerTintColor: "white" }}></Drawer.Screen>
-              <Drawer.Screen name="EditStaff" component={EditStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "blue" }, headerTintColor: "white" }}></Drawer.Screen>
-              <Drawer.Screen name="Detail" component={DetailKeluhan} options={{ drawerItemStyle: { display: "none" }, headerShown: false }}></Drawer.Screen>
-              <Drawer.Screen name="BuatKeluhan" component={BuatKeluhan} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "blue" }, headerTintColor: "white" }} />
-              <Drawer.Screen name="PengajuanKeluhan" component={PengajuanKeluhan} options={{
+              <Drawer.Screen name="Pengajuan Barang" component={PengajuanKeluhan} options={{
                 headerStyle: {
-                  backgroundColor: "blue",
+                  backgroundColor: "#212529",
+                },
+                headerTintColor: "white",
+                drawerIcon: ({ color }) => (
+                  <FontAwesome name="ticket" size={22} color={color} />
+                )
+              }} />
+              <Drawer.Screen name="Laporan" component={PengajuanKeluhan} options={{
+                headerStyle: {
+                  backgroundColor: "#212529",
                 },
                 headerTintColor: "white",
                 drawerIcon: ({ color }) => (

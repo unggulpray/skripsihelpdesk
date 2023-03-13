@@ -38,11 +38,11 @@ const StockBarang = () => {
     }, [])
     return (
         <ScrollView>
-            <View style={[{ display: "flex", flexDirection: "row", width: "90%", marginLeft: "5%", marginTop: 20, }]}>
+            <View style={[styles.container]}>
                 {
                     barang.map((item, index) => {
                         return (
-                            <View key={item.id} style={[styles.card, { width: "90%" }]}>
+                            <View key={item.id} style={[styles.card]}>
                                 <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
                                 <View style={[styles.backgroundText]}>
                                     <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
@@ -50,7 +50,8 @@ const StockBarang = () => {
                                 </View>
                             </View>
                         )
-                    })}
+                    })
+                }
             </View>
         </ScrollView>
     )
@@ -59,6 +60,15 @@ const StockBarang = () => {
 export default StockBarang;
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexWrap: 'wrap',
+        flexDirection: "row",
+        width: "88%",
+        marginLeft: "6%",
+        justifyContent: "space-between",
+        marginTop: 20,
+    },
     textCenter: {
         textAlign: "center"
     },
@@ -77,7 +87,8 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: "#fff",
-        height: 130,
-        flex: 1
+        height: 150,
+        width: 150,
+        margin: 4,
     },
 });
