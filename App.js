@@ -21,6 +21,7 @@ import { getDocs } from "firebase/firestore";
 import { async } from "@firebase/util";
 import KelolaStaff from "./src/tampilan/admin/kelolastaff/KelolaStaff";
 import TambahStaff from "./src/tampilan/admin/kelolastaff/TambahStaff";
+import VideoCall from "./src/component/VideoCall";
 import EditStaff from "./src/tampilan/admin/kelolastaff/EditStaff";
 import StockBarang from "./src/tampilan/admin/kelolabarang/StockBarang";
 import db from "./src/config/db";
@@ -89,6 +90,7 @@ const App = () => {
                 )
               }} />
               <Drawer.Screen name="TambahStaff" component={TambahStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
+              <Drawer.Screen name="VideoCall" component={VideoCall} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
               <Drawer.Screen name="EditStaff" component={EditStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
               <Drawer.Screen name="Management Barang" component={StockBarang} options={{
                 headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white", drawerIcon: ({ color }) => (

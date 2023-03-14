@@ -46,19 +46,19 @@ const Dashboard = ({ navigation }) => {
                                 </View>
                                 <View style={[styles.containerItem, { backgroundColor: '#fff', paddingTop: 15, paddingBottom: 15, marginTop: -50, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, borderRadius: 8 }]}>
                                     <View style={{ flexDirection: "column" }}>
-                                        <Image source={require('../../../assets/images/keluhan.jpeg')} style={{ width: 70, height: 60 }} />
+                                        <Image source={require('../../../assets/images/admin.png')} style={{ width: 70, height: 60 }} />
                                         <Text style={[styles.textCenter, styles.bold]}>3</Text>
-                                        <Text style={styles.bold}>Data Keluhan</Text>
+                                        <Text style={styles.bold}>Admin</Text>
                                     </View>
                                     <View style={{ flexDirection: "column" }}>
-                                        <Image source={require('../../../assets/images/tertunda.jpeg')} style={{ width: 100, height: 60, }} />
+                                        <Image source={require('../../../assets/images/staffumum.png')} style={{ width: 100, height: 60, }} />
                                         <Text style={[styles.textCenter, styles.bold]}>3</Text>
-                                        <Text style={styles.bold}>Belum Dikerjakan</Text>
+                                        <Text style={styles.bold}>Staff Umum</Text>
                                     </View>
                                     <View style={{ flexDirection: "column" }}>
-                                        <Image source={require('../../../assets/images/complete.jpeg')} style={{ width: 70, height: 60 }} />
+                                        <Image source={require('../../../assets/images/staffIT.png')} style={{ width: 70, height: 60 }} />
                                         <Text style={[styles.textCenter, styles.bold]}>3</Text>
-                                        <Text style={styles.bold}>Diselesaikan</Text>
+                                        <Text style={styles.bold}>Staff IT</Text>
                                     </View>
                                 </View>
                             </View>

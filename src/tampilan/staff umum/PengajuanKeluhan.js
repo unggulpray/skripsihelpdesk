@@ -83,7 +83,8 @@ const PengajuanKeluhan = ({ navigation }) => {
                                                 </View>
                                             </TouchableHighlight>
                                             <View style={[{ flexDirection: "row" }]}>
-                                                <TouchableHighlight onPress={() => { Linking.openURL(`tel:${item.noTelpStaffIT}`) }} style={styles.center}><FontAwesome name="phone" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight>
+                                                {/* <TouchableHighlight onPress={() => { Linking.openURL(`tel:${item.noTelpStaffIT}`) }} style={styles.center}><FontAwesome name="phone" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight> */}
+                                                {/* <TouchableHighlight onPress={() => navigation.navigate('VideoCall', { noTelpTujuan: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight> */}
                                                 <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
                                             </View>
                                         </View>
