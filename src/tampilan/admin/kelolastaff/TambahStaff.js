@@ -12,7 +12,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 
-const TambahStaff = () => {
+const TambahStaff = ({ navigation }) => {
     const [nama, setNama] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const TambahStaff = () => {
     const [role, setRole] = useState('');
     const [noTelp, setNoTelp] = useState('');
     const [alamat, setAlamat] = useState('');
-    const [roleNumber, setRoleNumber] = useState();
+    const [roleNumber, setRoleNumber] = useState(0);
 
     const createStaff = async () => {
         console.log("Nama : ", nama);
@@ -36,11 +36,6 @@ const TambahStaff = () => {
                 handleCodeInApp: true,
                 url: 'https://mobilehelpdesk-ba63a.firebaseapp.com',
             }).then(() => {
-                alert("Data staff baru telah ditambahkan");
-            }).catch((error) => {
-                alert(error.message);
-            }).then(() => {
-                const [roleNumber, setRoleNumber] = useState(0);
                 role == "Staff Admin" ? setRoleNumber(1) : role == "Staff IT" ? setRoleNumber(2) : setRoleNumber(3);
                 firebase.firestore().collection('staff')
                     .doc(firebase.auth().currentUser.uid)
@@ -52,7 +47,15 @@ const TambahStaff = () => {
                         totalKerja: 0,
                         role: roleNumber,
                         noTelp: noTelp,
-                        alamat: alamat
+                        alamat: alamat,
+                        createdDate: firebase.firestore.Timestamp.now()
+                    }).then(() => {
+                        alert("Data staff baru telah ditambahkan");
+                        try {
+                            navigation.navigate("Dashboard")
+                        } catch (e) {
+                            alert(e.message)
+                        }
                     })
             }).catch((error) => {
                 alert(error.message)
@@ -60,6 +63,35 @@ const TambahStaff = () => {
         }).catch((error) => {
             alert(error.message)
         })
+        // await firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+        //     firebase.auth().currentUser.sendEmailVerification({
+        //         handleCodeInApp: true,
+        //         url: 'https://mobilehelpdesk-ba63a.firebaseapp.com',
+        //     }).then(() => {
+        //         alert("Data staff baru telah ditambahkan");
+        //     }).catch((error) => {
+        //         alert(error.message);
+        //     }).then(() => {
+        //         const [roleNumber, setRoleNumber] = useState(0);
+        //         role == "Staff Admin" ? setRoleNumber(1) : role == "Staff IT" ? setRoleNumber(2) : setRoleNumber(3);
+        //         firebase.firestore().collection('staff')
+        //             .doc(firebase.auth().currentUser.uid)
+        //             .set({
+        //                 idUser: firebase.auth().currentUser.uid,
+        //                 nama: nama,
+        //                 email: email,
+        //                 password: password,
+        //                 totalKerja: 0,
+        //                 role: roleNumber,
+        //                 noTelp: noTelp,
+        //                 alamat: alamat
+        //             })
+        //     }).catch((error) => {
+        //         alert(error.message)
+        //     })
+        // }).catch((error) => {
+        //     alert(error.message)
+        // })
     }
 
     return (

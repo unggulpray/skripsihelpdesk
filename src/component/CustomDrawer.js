@@ -38,7 +38,7 @@ const CustomDrawer = props => {
                     <View style={[styles.backgroundText, styles.absolute, { bottom: 5 }]}><Text></Text></View>
                     {userSession.map((item, index) => {
                         return (
-                            <View style={[styles.absolute, { bottom: 5, flexDirection: 'row', marginLeft: 10 }]}>
+                            <View key={item.id} style={[styles.absolute, { bottom: 5, flexDirection: 'row', marginLeft: 10 }]}>
                                 <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/mobilehelpdesk-ba63a.appspot.com/o/Unggul-Prayuda.jpg?alt=media&token=85d167b9-eccf-453d-9b2e-4ba9d438fafd' }} style={{ width: 70, height: 70, borderRadius: 100, }} />
                                 <View style={{ flexDirection: 'column', marginTop: 20, marginLeft: 10 }}>
                                     <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#F27022' }}>{item.nama}</Text>

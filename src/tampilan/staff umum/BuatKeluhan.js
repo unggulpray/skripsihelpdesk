@@ -1,5 +1,5 @@
 import { async } from "@firebase/util";
-import react, { useEffect, useState } from "react";
+import react, { useEffect, useRef, useState } from "react";
 import { TouchableHighlight, TouchableOpacity, View, ImageBackground } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -17,12 +17,17 @@ const BuatKeluhan = ({ navigation }) => {
     const [ruang, setRuang] = useState('');
     const dataRuang = ['201', '202', '203', '204', '205', '301', '302', '303', '304', '305', '401', '402', '403', '404', '405', '501', '502', '503', '504', '505'];
 
+    const judulRef = useRef(null);
+    const ruangRef = useRef(null);
+    const keluhanRef = useRef(null);
+
     const AddData = async () => {
-        console.log(judul);
-        console.log(keluhan);
-        console.log(ruang);
         try {
             const docref = await getDocs(query(collection(db, 'staff'), orderBy('totalKerja', 'asc'), where('role', '==', 2), limit(1),));
+            const timestamp = firebase.firestore.Timestamp.now().toDate();
+            const deadline = new Date(timestamp.setMinutes(timestamp.getMinutes() + 10));
+            const deadlineTimestamp = firebase.firestore.Timestamp.fromDate(deadline);
+
             docref.docs.map((doc) => {
                 addDoc(collection(db, "keluhan"), {
                     idStaffUmum: firebase.auth().currentUser.uid,
@@ -31,12 +36,16 @@ const BuatKeluhan = ({ navigation }) => {
                     keluhan: keluhan,
                     noTelpStaffIT: doc.data().noTelp,
                     ruang: ruang,
-                    status: 'pengajuan'
+                    status: 'pengajuan',
+                    createdAt: firebase.firestore.Timestamp.now(),
+                    deadline: deadlineTimestamp
                 }).then(
+                    judulRef.current.clear(),
+                    ruangRef.current.clear(),
+                    keluhanRef.current.clear(),
                     alert("Data keluhan ditambahkan"),
                     navigation.navigate("PengajuanKeluhan")
                 );
-                // console.log(doc.data().idUser);
             })
         } catch (e) {
             console.error(e)
@@ -51,17 +60,17 @@ const BuatKeluhan = ({ navigation }) => {
                     <TouchableOpacity style={[styles.buttonPhoto, { marginTop: 10, marginBottom: 10 }]}><Text style={{ fontSize: 16, padding: 5 }}><AntDesign name="camera" size={20}></AntDesign>Take Photo</Text></TouchableOpacity>
                 </View>
                 <View style={styles.container}>
-                    <TextInput style={[styles.input, styles.border1, { fontSize: 16 }]} placeholder="Judul Keluhan" onChangeText={(judul) => setJudul(judul)}></TextInput>
+                    <TextInput ref={judulRef} style={[styles.input, styles.border1, { fontSize: 16 }]} placeholder="Judul Keluhan" onChangeText={(judul) => setJudul(judul)}></TextInput>
                     <SelectList
+                        ref={ruangRef}
                         data={dataRuang}
                         setSelected={setRuang}
                         boxStyles={[{ backgroundColor: "#fff", borderRadius: 100 }]}
                         inputStyles={{ fontSize: 16, }}
                     />
-                    <TextInput style={[styles.textInput, styles.border1]} placeholder="Masukkan Keluhan" onChangeText={(keluhan) => setKeluhan(keluhan)}></TextInput>
+                    <TextInput ref={keluhanRef} style={[styles.textInput, styles.border1]} placeholder="Masukkan Keluhan" onChangeText={(keluhan) => setKeluhan(keluhan)}></TextInput>
                     <View style={[{ marginTop: 20, }]}>
                         <TouchableHighlight onPress={AddData} style={[styles.button, { backgroundColor: "#FE1919", width: "80%", marginLeft: "10%" }]}><Text style={[styles.textCenter, { fontSize: 22, color: "#ffffff", padding: 5 }]}><FontAwesome name="plus" size={22} style={{ marginRight: 10 }}></FontAwesome>Buat Keluhan</Text></TouchableHighlight>
-                        <TouchableHighlight style={[styles.button, { backgroundColor: "#948E8E", width: "70%", marginLeft: "15%", marginTop: 10 }]}><Text style={[styles.textCenter, { fontSize: 22, color: "#ffffff", padding: 5 }]}>Tunda</Text></TouchableHighlight>
                     </View>
                 </View>
             </ScrollView>

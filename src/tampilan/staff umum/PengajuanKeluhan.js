@@ -18,10 +18,12 @@ const PengajuanKeluhan = ({ navigation }) => {
         firebase.firestore().collection('keluhan').where('idStaffUmum', '==', firebase.auth().currentUser.uid).onSnapshot((querySnapshot) => {
             const docsKeluhan = [];
             querySnapshot.forEach((doc) => {
-                const data = doc.data();
+                const data = doc.data()
+                data.id = doc.id
                 docsKeluhan.push(data);
             });
             setKeluhan(docsKeluhan);
+            console.log(keluhan);
         }),
             // ; (async () => {
             //     const colRef = query(collection(db, 'keluhan'), where('idStaffIT', '==', firebase.auth().currentUser.uid));
@@ -45,11 +47,11 @@ const PengajuanKeluhan = ({ navigation }) => {
                     const getDocStaff = snapshotsStaff.docs.map((docStaff) => {
                         const resultStaff = docStaff.data()
                         resultStaff.id = docStaff.id;
-                        // console.log(data.idStaffUmum);
+
                         return resultStaff;
                     })
                     setDataStaff([...dataStaff, getDocStaff]);
-                    // console.log(dataStaff);
+                    console.log(dataStaff);
                 })();
             });
 
@@ -84,8 +86,8 @@ const PengajuanKeluhan = ({ navigation }) => {
                                             </TouchableHighlight>
                                             <View style={[{ flexDirection: "row" }]}>
                                                 {/* <TouchableHighlight onPress={() => { Linking.openURL(`tel:${item.noTelpStaffIT}`) }} style={styles.center}><FontAwesome name="phone" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight> */}
-                                                {/* <TouchableHighlight onPress={() => navigation.navigate('VideoCall', { noTelpTujuan: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight> */}
-                                                <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
+                                                <TouchableHighlight onPress={() => navigation.navigate('VideoCall', { noTelpTujuan: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
+                                                <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT, idKontak: item.idStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
                                             </View>
                                         </View>
                                         // <TouchableHighlight key={item.id} onPress={() => navigation.navigate('Detail', { data: keluhan[index] })} style={{ width: '80%' }}>

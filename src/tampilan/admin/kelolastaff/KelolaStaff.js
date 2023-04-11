@@ -29,6 +29,7 @@ const KelolaStaff = ({ navigation }) => {
                 docsStaff.push(data)
             });
             setStaff(docsStaff);
+            console.log(staff);
         });
         // ; (async () => {
         //     const snapshots = await getDocs(collection(db, "staff"));

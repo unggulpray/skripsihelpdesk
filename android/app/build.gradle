@@ -276,6 +276,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':react-native-image-picker')
 
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -325,6 +326,22 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+}
+
+project(':react-native-image-picker') {
+  rootProject.ext.vectoriconsDir =  '../node_modules/react-native-image-picker/android'
+
+  // Include this line if you are using AndroidX
+  // def enableJetifier = true
+
+  // Include this line if you have camera permissions issues
+  // android.useAndroidX = true
+
+  // Include this line if you have runtime permissions issues
+  // android.requestLegacyExternalStorage = true
+
+  include ':react-native-image-picker'
+  project(':react-native-image-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-picker/android')
 }
 
 if (isNewArchitectureEnabled()) {
