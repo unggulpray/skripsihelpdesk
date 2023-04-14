@@ -41,7 +41,7 @@ const BuatKeluhan = ({ navigation }) => {
                     deadline: deadlineTimestamp
                 }).then(
                     judulRef.current.clear(),
-                    ruangRef.current.clear(),
+                    setRuang(null),
                     keluhanRef.current.clear(),
                     alert("Data keluhan ditambahkan"),
                     navigation.navigate("PengajuanKeluhan")
@@ -62,7 +62,6 @@ const BuatKeluhan = ({ navigation }) => {
                 <View style={styles.container}>
                     <TextInput ref={judulRef} style={[styles.input, styles.border1, { fontSize: 16 }]} placeholder="Judul Keluhan" onChangeText={(judul) => setJudul(judul)}></TextInput>
                     <SelectList
-                        ref={ruangRef}
                         data={dataRuang}
                         setSelected={setRuang}
                         boxStyles={[{ backgroundColor: "#fff", borderRadius: 100 }]}

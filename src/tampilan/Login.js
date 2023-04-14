@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ImageBackground, Image, View, StyleSheet, Text, TextInput, TouchableOpacity, SafeAreaView, Linking, Button } from "react-native";
+import { Card } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from '../config/firebase';
 
@@ -31,7 +32,9 @@ const Login = () => {
                             </View>
                             <Text style={[styles.bold, styles.white, { marginTop: -2 }]}>Forgot Password?</Text>
                         </View>
-                        <TouchableOpacity onPress={() => loginUser(email, password)} style={[styles.buttonRadius, { marginBottom: 30 }]}><Text style={[styles.white, styles.textCenter, styles.bold, { fontSize: 25 }]}>Login</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => loginUser(email, password)}>
+                            <Text style={[styles.white, styles.textCenter, styles.bold, { fontSize: 25 }]}>Login</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </ImageBackground>

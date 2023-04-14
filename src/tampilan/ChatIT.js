@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image } from "react-native";
 import firebase from "firebase/compat";
 import { collection, query } from "firebase/firestore";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 
 const ChatAdmin = ({ navigation }) => {
     const [listIT, setListIT] = useState([]);
     const [lastChat, setLastChat] = useState([]);
-    let chatKirim = [];
-    let chatTerima = [];
+    const [updateKirim, setUpdateKirim] = useState([]);
+    const [updateTerima, setUpdateTerima] = useState([]);
+    const [chatKirim, setChatKirim] = useState([]);
+    const [chatTerima, setChatTerima] = useState([]);
 
     useEffect(() => {
         firebase.firestore().collection('staff').where('idUser', '!=', firebase.auth().currentUser.uid).where('role', '==', 2).onSnapshot((snapshots) => {
@@ -22,60 +24,158 @@ const ChatAdmin = ({ navigation }) => {
             })
             setListIT(IT);
         });
+
+        firebase.firestore().collection('chat').where('idPengirim', '==', firebase.auth().currentUser.uid).onSnapshot((snapshots) => {
+            const update = [];
+            snapshots.forEach((doc) => {
+                const data = doc.data()
+                data.id = doc.id
+
+                update.push(data)
+            });
+
+            setUpdateKirim(update);
+        })
+
+        firebase.firestore().collection('chat').where('idPenerima', '==', firebase.auth().currentUser.uid).onSnapshot((snapshots) => {
+            const update = [];
+            snapshots.forEach((doc) => {
+                const data = doc.data()
+                data.id = doc.id
+
+                update.push(data)
+            })
+
+            setChatTerima(update);
+        })
     }, [])
 
 
     useEffect(() => {
-        // setAllChatTerima([]);
-        // setAllChatKirim([]);
-
+        const arrayChatKirim = [];
+        const arrayChatTerima = [];
         listIT.map((item, index) => {
-            chatKirim = [];
-            chatTerima = [];
             firebase.firestore().collection('chat').where('idPengirim', '==', firebase.auth().currentUser.uid).where('idPenerima', '==', item.idUser).orderBy('createdDate', 'desc').limit(1).onSnapshot((snapshots) => {
+                let chatLooping = [];
                 snapshots.forEach((doc) => {
                     const data = doc.data()
                     data.id = doc.id
-                    if (chatKirim.filter((msg) => msg.id === data.id).length < 1) {
-                        console.log("chat kirim : ", index, chatKirim);
-                        chatKirim.push(data);
-                    }
-                })
+                    data.tipe = "pengirim"
+
+                    chatLooping.push(data);
+                    arrayChatKirim.push(data);
+                    setChatKirim([...arrayChatKirim]);
+                });
+
+                if (chatLooping.length < 1) {
+                    const data = {};
+                    arrayChatKirim.push(data);
+
+                    setChatKirim([...arrayChatKirim]);
+                }
             })
             firebase.firestore().collection('chat').where('idPengirim', '==', item.idUser).where('idPenerima', '==', firebase.auth().currentUser.uid).orderBy('createdDate', 'desc').limit(1).onSnapshot((snapshots) => {
+                let chatLooping = [];
                 snapshots.forEach((doc) => {
                     const data = doc.data()
                     data.id = doc.id
-                    if (chatTerima.filter((msg) => msg.id === data.id).length < 1) {
-                        console.log("chat terima : ", index, chatTerima);
-                        chatTerima.push(data);
-                    }
+                    data.tipe = "penerima"
+
+                    chatLooping.push(data);
+                    arrayChatTerima.push(data)
+                    setChatTerima([...arrayChatTerima]);
                 })
+
+                if (chatLooping.length < 1) {
+                    const data = {};
+                    arrayChatTerima.push(data);
+
+                    setChatTerima([...arrayChatTerima]);
+                }
             })
         })
-    }, [listIT])
+    }, [updateKirim, updateTerima])
 
     useEffect(() => {
-        console.log("all chat wkwk terima : ", chatKirim);
-        console.log("all chat kirim : ", chatTerima);
+        console.log("chat kirim : ", chatKirim);
+        console.log("chat terima : ", chatTerima);
+        const saringChat = [];
+        listIT.map((item, index) => {
+            if (chatKirim[index] == undefined || chatTerima[index] == undefined) {
+                setLastChat([]);
+            } else {
+                if (chatKirim[index].createdDate == undefined && chatTerima[index].createdDate == undefined) {
+                    const data = { tipe: "tidakada" }
+                    saringChat.push(data);
+                    setLastChat([...saringChat]);
+                } else if (chatKirim[index].createdDate != undefined && chatTerima[index].createdDate == undefined) {
+                    saringChat.push(chatKirim[index]);
+                    setLastChat([...saringChat]);
+                } else if (chatKirim[index].createdDate == undefined && chatTerima[index].createdDate != undefined) {
+                    saringChat.push(chatTerima[index]);
+                    setLastChat([...saringChat]);
+                } else {
+                    if (chatKirim[index].createdDate.seconds > chatTerima[index].createdDate.seconds) {
+                        saringChat.push(chatKirim[index]);
+                        setLastChat([...saringChat]);
+                    } else {
+                        saringChat.push(chatTerima[index]);
+                        setLastChat([...saringChat]);
+                    }
+                }
+            }
+        })
 
     }, [chatKirim, chatTerima])
 
+    useEffect(() => {
+        console.log("ini last chat : ", lastChat);
+    }, [lastChat])
+
     return (
-        <View>
+        <ScrollView>
             {listIT.map((item, index) => {
-                return (
-                    <TouchableOpacity onPress={() => { navigation.navigate('Chat', { idKontak: item.idUser }) }}>
-                        <View style={[{ flexDirection: 'row', marginLeft: 10, marginTop: 2 }]} >
-                            <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 50, height: 50, borderRadius: 100 }} />
-                            <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 2 }}>
-                                <Text style={{ fontWeight: 'bold' }}>{item.nama}</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                )
+                if (lastChat[index] != undefined) {
+                    if (lastChat[index].tipe == "penerima") {
+                        return (
+                            <TouchableOpacity onPress={() => { navigation.navigate('Chat', { idKontak: item.idUser }) }}>
+                                <View style={[{ flexDirection: 'row', marginLeft: 10, marginTop: 2 }]} >
+                                    <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 50, height: 50, borderRadius: 100 }} />
+                                    <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 2 }}>
+                                        <Text style={{ fontWeight: 'bold' }}>{item.nama}</Text>
+                                        <Text>{lastChat[index].pesan}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    } else if (lastChat[index].tipe == "pengirim") {
+                        return (
+                            <TouchableOpacity onPress={() => { navigation.navigate('Chat', { idKontak: item.idUser }) }}>
+                                <View style={[{ flexDirection: 'row', marginLeft: 10, marginTop: 2 }]} >
+                                    <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 50, height: 50, borderRadius: 100 }} />
+                                    <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 2 }}>
+                                        <Text style={{ fontWeight: 'bold' }}>{item.nama}</Text>
+                                        <Text>Anda : {lastChat[index].pesan}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    } else {
+                        return (
+                            <TouchableOpacity onPress={() => { navigation.navigate('Chat', { idKontak: item.idUser }) }}>
+                                <View style={[{ flexDirection: 'row', marginLeft: 10, marginTop: 2 }]} >
+                                    <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 50, height: 50, borderRadius: 100 }} />
+                                    <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 2 }}>
+                                        <Text style={{ fontWeight: 'bold' }}>{item.nama}</Text>
+                                        <Text>wkwk</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }
+                }
             })}
-        </View>
+        </ScrollView>
     )
 }
 

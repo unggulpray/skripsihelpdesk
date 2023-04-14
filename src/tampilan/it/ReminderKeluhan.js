@@ -74,8 +74,8 @@ const ReminderKeluhan = ({ navigation }) => {
                             {
                                 keluhan.map((item, index) => {
                                     return (
-                                        <View>
-                                            <Text style={{ fontWeight: 'bold' }}>{item.date}</Text>
+                                        <View style={{ marginTop: 5 }}>
+                                            <Text style={{ fontWeight: 'bold', marginLeft: "5%" }}>{item.date}</Text>
                                             {item.data.map((isi, indexisi) => {
                                                 return (
                                                     <View key={isi.id} style={[styles.listKeluhan, { flexDirection: "row", borderColor: "#000000", borderWidth: 1, }]}>

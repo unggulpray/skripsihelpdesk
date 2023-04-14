@@ -9,6 +9,8 @@ const StockBarang = () => {
     const [updateMasuk, setUpdateMasuk] = useState([]);
     const [updateKeluar, setUpdateKeluar] = useState([]);
 
+    const [test, setTest] = useState([]);
+
     const [stok, setStok] = useState([]);
 
     useEffect(() => {
@@ -20,6 +22,7 @@ const StockBarang = () => {
 
                 dataBarang.push(data);
             });
+
             setBarang(dataBarang);
         })
 
@@ -31,7 +34,7 @@ const StockBarang = () => {
 
                 masuk.push(data);
             });
-            console.log("update masuk : ", masuk);
+            // console.log("update masuk : ", masuk);
             setUpdateMasuk(masuk);
         })
 
@@ -43,7 +46,7 @@ const StockBarang = () => {
 
                 keluar.push(data);
             });
-            console.log("update keluar : ", keluar);
+            // console.log("update keluar : ", keluar);
             setUpdateKeluar(keluar);
         })
 
@@ -55,48 +58,110 @@ const StockBarang = () => {
     }, [])
 
     useEffect(() => {
+        const test = [];
         barang.map((item, index) => {
             firebase.firestore().collection('barangMasuk').where('idBarang', '==', item.id).onSnapshot((snapshots) => {
                 const brgMasuk = [];
                 snapshots.forEach((doc) => {
-                    const data = doc.data()
-                    data.id = doc.id
-
+                    const data = doc.data();
+                    data.id = doc.id;
                     brgMasuk.push(data);
+                    test.push(data);
+                    setJmlBarangMasuk([...test]);
                 });
-                const cariBarang = jmlBarangMasuk.find(barang => barang.idBarang === item.id);
-                if (cariBarang) {
-
-                }
 
                 if (brgMasuk.length == 0) {
                     const data = { jumlah: 0, idBarang: item.id };
-                    brgMasuk.push(data);
-                    // console.log("test barang masuk : ", testBarangMasuk);
+                    test.push(data);
+                    setJmlBarangMasuk([...test]);
                 }
-                setJmlBarangMasuk([...jmlBarangMasuk, brgMasuk]);
             });
         })
-    }, [updateMasuk, updateKeluar])
+
+
+
+    }, [updateMasuk]);
 
     useEffect(() => {
-        console.log("jml barang masuk : ", jmlBarangMasuk);
-    }, [jmlBarangMasuk])
+        const test = [];
+        barang.map((item, index) => {
+            firebase.firestore().collection('barangKeluar').where('idBarang', '==', item.id).onSnapshot((snapshots) => {
+                const brgKeluar = [];
+                let jumlahBarang = 0;
+                snapshots.forEach((doc) => {
+                    const data = doc.data();
+                    data.id = doc.id;
+                    brgKeluar.push(data);
+                    jumlahBarang += doc.data().jumlah
+                });
+
+                if (brgKeluar.length == 0) {
+                    const data = { jumlah: 0, idBarang: item.id };
+                    test.push(data);
+                    setJmlBarangKeluar([...test]);
+                } else {
+                    const data = { jumlah: jumlahBarang, idBarang: item.id }
+                    test.push(data);
+                    setJmlBarangKeluar([...test]);
+                }
+            });
+        })
+    }, [updateKeluar])
+
+
+    useEffect(() => {
+        console.log("jumlah barang masuk : ", jmlBarangMasuk);
+        console.log("jumlah barang keluar : ", jmlBarangKeluar);
+
+        let jumlahStok = [];
+
+        barang.map((item, index) => {
+            if (jmlBarangMasuk[index] != undefined && jmlBarangKeluar[index] != undefined) {
+                const findBarangMasuk = jmlBarangMasuk[index].jumlah;
+                const findBarangKeluar = jmlBarangKeluar[index].jumlah;
+
+                console.log("find barang masuk : ", findBarangMasuk);
+                console.log("find barang keluar : ", findBarangKeluar);
+                jumlahStok.push({ jumlah: (findBarangMasuk - findBarangKeluar) });
+                setStok([...jumlahStok]);
+            } else {
+                setStok([]);
+            }
+        })
+    }, [jmlBarangKeluar, jmlBarangMasuk])
+
+    useEffect(() => {
+        console.log("stok : ", stok);
+    }, [stok])
+
+
 
     return (
         <ScrollView>
             <View style={[styles.container]}>
                 {
                     barang.map((item, index) => {
-                        return (
-                            <View key={item.id} style={[styles.card]}>
-                                <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
-                                <View style={[styles.backgroundText]}>
-                                    <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
-                                    {/* <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{ }</Text> */}
+                        if (stok[index] == undefined) {
+                            return (
+                                <View key={item.id} style={[styles.card]}>
+                                    <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
+                                    <View style={[styles.backgroundText]}>
+                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
+                                        {/* <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{stok[0].jumlah}</Text> */}
+                                    </View>
                                 </View>
-                            </View>
-                        )
+                            )
+                        } else if (stok[index] != undefined) {
+                            return (
+                                <View key={item.id} style={[styles.card]}>
+                                    <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
+                                    <View style={[styles.backgroundText]}>
+                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
+                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{stok[index].jumlah}</Text>
+                                    </View>
+                                </View>
+                            )
+                        }
                     })
                 }
             </View>

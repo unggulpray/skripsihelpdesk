@@ -16,6 +16,7 @@ export default function Chat({ route, navigation }) {
 
     const [pesan, setPesan] = useState('');
     const [resultChat, setResultChat] = useState([]);
+    const [endResultChat, setEndResultChat] = useState([]);
 
     const pesanRef = useRef(null);
 
@@ -71,8 +72,6 @@ export default function Chat({ route, navigation }) {
     }, [route.params.idKontak]);
 
     useEffect(() => {
-        // console.log("chat penerima : ", chatPenerima);
-        // console.log("chat pengirim : ", chatPengirim);
         setChat([...chatPenerima, ...chatPengirim].sort((a, b) => a.date - b.date));
     }, [chatPenerima, chatPengirim]);
 
@@ -99,11 +98,17 @@ export default function Chat({ route, navigation }) {
 
     useEffect(() => {
         function compareByDate(a, b) {
-            return a.date - b.date;
+            const DateA = new Date(a.date);
+            const DateB = new Date(b.date);
+            return DateA - DateB;
         }
         resultChat.sort(compareByDate);
-        console.log("result : ", resultChat);
+        setEndResultChat(resultChat);
     }, [resultChat])
+
+    useEffect(() => {
+        console.log("end result : ", endResultChat);
+    }, [endResultChat])
 
 
     const kirim = () => {
@@ -150,7 +155,7 @@ export default function Chat({ route, navigation }) {
                 <View style={[{ height: "90%" }]}>
                     <ScrollView ref={scrollViewRef} onContentSizeChange={handleContentSizeChange} onScroll={handleScroll}>
                         {
-                            resultChat.map((item, index) => {
+                            endResultChat.map((item, index) => {
                                 const now = firebase.firestore.Timestamp.now().toDate().toLocaleDateString();
                                 const nowDate = new Date();
                                 let tanggal = item.date;
@@ -214,10 +219,15 @@ export default function Chat({ route, navigation }) {
                     )}
                 </View>
                 <TextInput ref={pesanRef} style={[style.inputPesan]} placeholder="Masukkan Pesan"
+                    value={pesan}
                     multiline={true}
                     numberOfLines={2}
                     onChangeText={(pesan) => { setPesan(pesan) }}
                 />
+                {/* <Button title="😀" onPress={() => setShowEmojiPicker(true)} />
+                {showEmojiPicker && (
+                    <EmojiSelector onEmojiSelected={handleEmojiSelect} />
+                )} */}
                 <TouchableHighlight style={style.sendButton} onPress={kirim}>
                     <FontAwesome name="send" size={20} color="white"></FontAwesome>
                 </TouchableHighlight>

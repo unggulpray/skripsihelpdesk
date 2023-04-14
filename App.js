@@ -223,15 +223,6 @@ const App = () => {
                   <FontAwesome name="ticket" size={22} color={color} />
                 )
               }} />
-              <Drawer.Screen name="Chat" component={Chat} options={{
-                headerStyle: {
-                  backgroundColor: "#fff",
-                },
-                headerTintColor: "white",
-                drawerIcon: ({ color }) => (
-                  <FontAwesome name="ticket" size={22} color={color} />
-                )
-              }} />
               <Drawer.Screen name="BuatKeluhan" component={BuatKeluhan} options={{
                 drawerItemStyle: {
                   display: "none"

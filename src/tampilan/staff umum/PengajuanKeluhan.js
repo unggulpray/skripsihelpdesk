@@ -1,5 +1,6 @@
 import React, { Component, useCallback, useEffect, useState } from "react";
-import { Text, TextInput, StyleSheet, TouchableHighlight, Image, View, Linking, ImageBackground } from "react-native";
+import { Text, TextInput, StyleSheet, TouchableHighlight, Image, View, Linking, ImageBackground, TouchableWithoutFeedback } from "react-native";
+import Modal from "react-native-modal";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Firestore, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc, collection, getFirestore, getDocs, query, where, Query, orderBy, QuerySnapshot } from 'firebase/firestore';
@@ -13,6 +14,12 @@ import { FloatingAction } from "react-native-floating-action";
 const PengajuanKeluhan = ({ navigation }) => {
     let [keluhan, setKeluhan] = useState([]);
     let [dataStaff, setDataStaff] = useState([]);
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    function handleModalToggle() {
+        setModalVisible(!modalVisible);
+    }
 
     useEffect(() => {
         firebase.firestore().collection('keluhan').where('idStaffUmum', '==', firebase.auth().currentUser.uid).onSnapshot((querySnapshot) => {
@@ -86,7 +93,27 @@ const PengajuanKeluhan = ({ navigation }) => {
                                             </TouchableHighlight>
                                             <View style={[{ flexDirection: "row" }]}>
                                                 {/* <TouchableHighlight onPress={() => { Linking.openURL(`tel:${item.noTelpStaffIT}`) }} style={styles.center}><FontAwesome name="phone" style={[styles.icon, { color: "green", fontSize: 20 }]}></FontAwesome></TouchableHighlight> */}
-                                                <TouchableHighlight onPress={() => navigation.navigate('VideoCall', { noTelpTujuan: item.noTelpStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
+                                                <TouchableWithoutFeedback onPress={handleModalToggle}>
+                                                    <View style={styles.button}>
+                                                        <Text>Open Modal</Text>
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                <Modal
+                                                    visible={modalVisible}
+                                                    animationType="slide"
+                                                    transparent={true}
+                                                    onRequestClose={handleModalToggle}
+                                                >
+                                                    <View style={styles.modalContainer}>
+                                                        <TouchableWithoutFeedback onPress={handleModalToggle}>
+                                                            <View style={styles.overlay}></View>
+                                                        </TouchableWithoutFeedback>
+                                                        <View style={styles.modalContent}>
+                                                            {/* Your modal content */}
+                                                            <Text>This is the bottom half modal</Text>
+                                                        </View>
+                                                    </View>
+                                                </Modal>
                                                 <TouchableHighlight onPress={() => navigation.navigate('Chat', { title: item.noTelpStaffIT, idKontak: item.idStaffIT })} style={{ marginLeft: '2%' }}><Ionicons name="chatbubble-ellipses-outline" style={[styles.icon, { color: 'green', fontSize: 25, fontWeight: 'bold' }]}></Ionicons></TouchableHighlight>
                                             </View>
                                         </View>
