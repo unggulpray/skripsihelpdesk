@@ -32,7 +32,7 @@ const Login = () => {
                             </View>
                             <Text style={[styles.bold, styles.white, { marginTop: -2 }]}>Forgot Password?</Text>
                         </View>
-                        <TouchableOpacity onPress={() => loginUser(email, password)}>
+                        <TouchableOpacity style={[styles.buttonRadius, { marginBottom: 30 }]} onPress={() => loginUser(email, password)}>
                             <Text style={[styles.white, styles.textCenter, styles.bold, { fontSize: 25 }]}>Login</Text>
                         </TouchableOpacity>
                     </View>

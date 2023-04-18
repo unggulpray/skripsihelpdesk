@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image } from "react-native";
-import firebase from "firebase/compat";
+import { firebase } from '../config/firebase';
 import { collection, query } from "firebase/firestore";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 

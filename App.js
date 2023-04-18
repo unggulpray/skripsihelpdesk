@@ -23,6 +23,7 @@ import DetailReminder from "./src/tampilan/it/DetailReminder";
 // import VideoCall from "./src/component/VideoCall";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TabBottom from "./src/component/TabBottom";
+import TabKeluhan from "./src/component/TabKeluhan";
 
 
 const Stack = createNativeStackNavigator();
@@ -74,7 +75,6 @@ const App = () => {
       userSession.map((item) => {
         if (item.role == 1) {
           return (
-
             <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />} screenOptions={{
               drawerActiveBackgroundColor: '#aa18ea',
               drawerActiveTintColor: '#fff',
@@ -136,9 +136,9 @@ const App = () => {
                   <FontAwesome name="ticket" size={22} color={color} />
                 )
               }} />
-              <Drawer.Screen name="Reminder Keluhan" component={KeluhanStaff} options={{
+              <Drawer.Screen name="Reminder Keluhan" component={TabKeluhan} options={{
                 headerStyle: {
-                  backgroundColor: "#212529",
+                  backgroundColor: "#108EE9",
                 },
                 headerTintColor: "white",
                 drawerIcon: ({ color }) => (
@@ -215,7 +215,7 @@ const App = () => {
                   <FontAwesome name="ticket" size={22} color={color} />
                 )
               }} />
-              <Drawer.Screen name="PengajuanKeluhan" component={PengajuanKeluhan} options={{
+              <Drawer.Screen name="PengajuanKeluhan" component={TabKeluhan} options={{
                 headerStyle: {
                   backgroundColor: "#212529",
                 },

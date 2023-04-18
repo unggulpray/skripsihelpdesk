@@ -1,6 +1,6 @@
 import react, { useState } from "react";
 import { SafeAreaView, Image, StyleSheet, View, Text, TouchableHighlight, ImageBackground } from "react-native";
-import firebase from "firebase/compat";
+import { firebase } from '../../config/firebase';
 
 export default function DetailKeluhan({ route, navigation }) {
     const batalkan = () => {

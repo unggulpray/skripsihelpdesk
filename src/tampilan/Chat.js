@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from "react-native";
-import firebase from "firebase/compat";
+import { firebase } from '../config/firebase';
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -94,7 +94,7 @@ export default function Chat({ route, navigation }) {
         });
 
         setResultChat(newArray);
-    }, chat)
+    }, [chat])
 
     useEffect(() => {
         function compareByDate(a, b) {
@@ -106,9 +106,9 @@ export default function Chat({ route, navigation }) {
         setEndResultChat(resultChat);
     }, [resultChat])
 
-    useEffect(() => {
-        console.log("end result : ", endResultChat);
-    }, [endResultChat])
+    // useEffect(() => {
+    //     console.log("end result : ", endResultChat);
+    // }, [endResultChat])
 
 
     const kirim = () => {
@@ -171,6 +171,51 @@ export default function Chat({ route, navigation }) {
                                     tanggal = "Today";
                                 } else if (item.date == yesterdayString) {
                                     tanggal = "Yesterday";
+                                } else {
+                                    const tanggalBulan = new Date(tanggal);
+                                    const date = tanggalBulan.getDate();
+                                    const bulan = tanggalBulan.getMonth();
+                                    let BulanString = '';
+                                    const tahun = tanggalBulan.getFullYear();
+                                    switch (bulan) {
+                                        case 0:
+                                            BulanString = "January";
+                                            break;
+                                        case 1:
+                                            BulanString = "Febuary";
+                                            break;
+                                        case 2:
+                                            BulanString = "Maret";
+                                            break;
+                                        case 3:
+                                            BulanString = "April";
+                                            break;
+                                        case 4:
+                                            BulanString = "Mei";
+                                            break;
+                                        case 5:
+                                            BulanString = "Juni";
+                                            break;
+                                        case 6:
+                                            BulanString = "Juli";
+                                            break;
+                                        case 7:
+                                            BulanString = "Agustus";
+                                            break;
+                                        case 8:
+                                            BulanString = "September";
+                                            break;
+                                        case 9:
+                                            BulanString = "Oktober";
+                                            break;
+                                        case 10:
+                                            BulanString = "November";
+                                            break;
+                                        case 11:
+                                            BulanString = "Desember";
+                                            break;
+                                    }
+                                    tanggal = date + " " + BulanString + " " + tahun;
                                 }
                                 return (
                                     <>

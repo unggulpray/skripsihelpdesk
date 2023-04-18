@@ -58,33 +58,30 @@ const StockBarang = () => {
     }, [])
 
     useEffect(() => {
-        const test = [];
+        const masuk = [];
+        const keluar = [];
         barang.map((item, index) => {
             firebase.firestore().collection('barangMasuk').where('idBarang', '==', item.id).onSnapshot((snapshots) => {
                 const brgMasuk = [];
+                let jumlahBarang = 0;
                 snapshots.forEach((doc) => {
                     const data = doc.data();
                     data.id = doc.id;
                     brgMasuk.push(data);
-                    test.push(data);
-                    setJmlBarangMasuk([...test]);
+                    jumlahBarang += doc.data().jumlah
                 });
 
                 if (brgMasuk.length == 0) {
                     const data = { jumlah: 0, idBarang: item.id };
-                    test.push(data);
-                    setJmlBarangMasuk([...test]);
+                    masuk.push(data);
+                    setJmlBarangMasuk([...masuk]);
+                } else {
+                    const data = { jumlah: jumlahBarang, idBarang: item.id }
+                    masuk.push(data);
+                    setJmlBarangMasuk([...masuk]);
                 }
             });
-        })
 
-
-
-    }, [updateMasuk]);
-
-    useEffect(() => {
-        const test = [];
-        barang.map((item, index) => {
             firebase.firestore().collection('barangKeluar').where('idBarang', '==', item.id).onSnapshot((snapshots) => {
                 const brgKeluar = [];
                 let jumlahBarang = 0;
@@ -97,16 +94,17 @@ const StockBarang = () => {
 
                 if (brgKeluar.length == 0) {
                     const data = { jumlah: 0, idBarang: item.id };
-                    test.push(data);
-                    setJmlBarangKeluar([...test]);
+                    keluar.push(data);
+                    setJmlBarangKeluar([...keluar]);
                 } else {
                     const data = { jumlah: jumlahBarang, idBarang: item.id }
-                    test.push(data);
-                    setJmlBarangKeluar([...test]);
+                    keluar.push(data);
+                    setJmlBarangKeluar([...keluar]);
                 }
             });
         })
-    }, [updateKeluar])
+    }, [updateMasuk, updateKeluar]);
+
 
 
     useEffect(() => {
@@ -116,17 +114,26 @@ const StockBarang = () => {
         let jumlahStok = [];
 
         barang.map((item, index) => {
-            if (jmlBarangMasuk[index] != undefined && jmlBarangKeluar[index] != undefined) {
-                const findBarangMasuk = jmlBarangMasuk[index].jumlah;
-                const findBarangKeluar = jmlBarangKeluar[index].jumlah;
+            const findBarangMasuk = jmlBarangMasuk.find(obj => obj.idBarang == item.id);
+            const findBarangKeluar = jmlBarangKeluar.find(obj => obj.idBarang == item.id);
 
-                console.log("find barang masuk : ", findBarangMasuk);
-                console.log("find barang keluar : ", findBarangKeluar);
-                jumlahStok.push({ jumlah: (findBarangMasuk - findBarangKeluar) });
+            if (findBarangMasuk == undefined && findBarangKeluar == undefined) {
+                jumlahStok.push({ jumlah: 0, idBarang: item.id });
                 setStok([...jumlahStok]);
-            } else {
-                setStok([]);
+            } else if (findBarangKeluar != undefined && findBarangMasuk == undefined) {
+                jumlahStok.push({ jumlah: findBarangKeluar.jumlah, idBarang: item.id });
+                setStok([...jumlahStok]);
+            } else if (findBarangKeluar == undefined && findBarangMasuk != undefined) {
+                jumlahStok.push({ jumlah: findBarangMasuk.jumlah, idBarang: item.id });
+                setStok([...jumlahStok]);
+            } else if (findBarangKeluar != undefined && findBarangMasuk != undefined) {
+                jumlahStok.push({ jumlah: (findBarangMasuk.jumlah - findBarangKeluar.jumlah), idBarang: item.id });
+                setStok([...jumlahStok]);
             }
+
+            console.log("find barang masuk : ", findBarangMasuk);
+            console.log("find barang keluar : ", findBarangKeluar);
+
         })
     }, [jmlBarangKeluar, jmlBarangMasuk])
 
@@ -141,23 +148,24 @@ const StockBarang = () => {
             <View style={[styles.container]}>
                 {
                     barang.map((item, index) => {
-                        if (stok[index] == undefined) {
+                        const getStockByID = stok.find((obj) => obj.idBarang == item.id);
+                        if (getStockByID == undefined) {
                             return (
                                 <View key={item.id} style={[styles.card]}>
                                     <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
                                     <View style={[styles.backgroundText]}>
                                         <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
-                                        {/* <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{stok[0].jumlah}</Text> */}
+                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{0}</Text>
                                     </View>
                                 </View>
                             )
-                        } else if (stok[index] != undefined) {
+                        } else if (getStockByID != undefined) {
                             return (
                                 <View key={item.id} style={[styles.card]}>
                                     <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
                                     <View style={[styles.backgroundText]}>
                                         <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
-                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{stok[index].jumlah}</Text>
+                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{getStockByID.jumlah}</Text>
                                     </View>
                                 </View>
                             )
