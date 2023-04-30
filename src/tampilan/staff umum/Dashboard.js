@@ -121,8 +121,18 @@ const Dashboard = ({ navigation }) => {
                                 <View style={styles.title_position}>
                                     <Text style={[styles.title, styles.white]}>Hai, {item.nama}</Text>
                                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                        <TouchableHighlight onPress={() => navigation.navigate('PengajuanKeluhan')} style={[styles.buttonRadius,]}><Text style={[styles.textCenter, styles.white, styles.buttonTextSlider]}><Entypo name='eye' size={22} color="white" style={{ marginRight: 10, marginTop: 10 }}></Entypo>Lihat Keluhan Saya</Text></TouchableHighlight>
-                                        <TouchableHighlight onPress={() => navigation.navigate('BuatKeluhan')} style={[styles.buttonRadius, { marginLeft: 5 }]}><Text style={[styles.textCenter, styles.white, styles.buttonTextSlider]}><MaterialIcon name='library-add' size={22} color="white" style={{ marginRight: 10, marginTop: 10 }} />Buat Keluhan Baru</Text></TouchableHighlight>
+                                        <TouchableHighlight onPress={() => navigation.navigate('PengajuanKeluhan')} style={[styles.buttonRadius]}>
+                                            <View style={{flexDirection:"row"}}>
+                                                <Entypo name='eye' size={22} color="white" style={{ marginRight: 5}}></Entypo>
+                                                <Text style={[styles.textCenter, styles.white, styles.buttonTextSlider]}>Lihat Keluhan Saya</Text>
+                                            </View>
+                                        </TouchableHighlight>
+                                        <TouchableHighlight onPress={() => navigation.navigate('BuatKeluhan')} style={[styles.buttonRadius, { marginLeft: 5 }]}>
+                                            <View style={{flexDirection:"row"}}>
+                                                <MaterialIcon name='library-add' size={22} color="white" style={{ marginRight: 5, }} />
+                                                <Text style={[styles.textCenter, styles.white, styles.buttonTextSlider]}>Buat Keluhan Baru</Text>
+                                            </View>
+                                        </TouchableHighlight>
                                     </ScrollView>
                                 </View>
                                 <View style={[styles.containerItem, { backgroundColor: '#fff', paddingTop: 15, paddingBottom: 15, marginTop: -50, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, borderRadius: 8 }]}>

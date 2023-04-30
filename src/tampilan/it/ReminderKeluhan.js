@@ -10,6 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { firebase } from '../../config/firebase';
 import { FloatingAction } from "react-native-floating-action";
 import { Card } from "react-native-elements";
+import Feather from "react-native-vector-icons/Feather";
 
 const ReminderKeluhan = ({ navigation }) => {
     let [keluhan, setKeluhan] = useState([]);
@@ -66,6 +67,7 @@ const ReminderKeluhan = ({ navigation }) => {
 
     function tutupModal() {
         setIdKeluhan('');
+        setInputJumlah(1);
         setModalVisible(false);
     }
 
@@ -320,7 +322,7 @@ const ReminderKeluhan = ({ navigation }) => {
                         </View>
                     </View>
                     <TouchableHighlight onPress={tambahBarang}>
-                        <Card containerStyle={[styles.buttonCustom, { width: "90%", marginLeft: "5%", backgroundColor: "#108EE9" }]}><Text style={{ textAlign: "center", fontSize: 15, fontWeight: "bold", color: "white" }}>Ajukan</Text></Card>
+                        <Card containerStyle={[styles.buttonCustom, { width: "90%", marginLeft: "5%", backgroundColor: "orange" }]}><Text style={{ textAlign: "center", fontSize: 15, fontWeight: "bold", color: "white" }}>Ajukan</Text></Card>
                     </TouchableHighlight>
                 </View>
             </Modal >
@@ -391,14 +393,19 @@ const ReminderKeluhan = ({ navigation }) => {
                                                             <Image source={{ uri: 'https://i1.rgstatic.net/ii/profile.image/1083598790766599-1635361492906_Q512/Unggul-Prayuda.jpg' }} style={{ width: 50, height: 50, margin: 1 }} />
                                                             <View style={{ flexDirection: "column", marginLeft: 15 }}>
                                                                 <Text style={{ fontWeight: "bold" }}>{isi.judulKeluhan}</Text>
-                                                                <Text>{isi.keluhan}</Text>
+                                                                <Text numberOfLines={1}>{isi.keluhan}</Text>
                                                                 <Text>Status : {isi.status}</Text>
                                                             </View>
                                                         </View>
                                                     </TouchableHighlight>
-                                                    <View style={[{ flexDirection: "row", justifyContent: "space-between" }]}>
+                                                    <View style={[{ flexDirection: "row", justifyContent: "space-between", marginTop:15 }]}>
                                                         <Text style={{ marginTop: 2 }}>Deadline : {hour + ':' + minutes}</Text>
-                                                        <TouchableHighlight onPress={() => bukaModal(isi.id)}><Text>Ajukan Barang</Text></TouchableHighlight>
+                                                        <TouchableHighlight onPress={() => bukaModal(isi.id)}>
+                                                            <View style={[{flexDirection:"row"}]}>
+                                                            <Feather name="box" size={22} style={{marginRight: 5}}/>
+                                                            <Text>Ajukan Barang</Text>
+                                                            </View>
+                                                            </TouchableHighlight>
                                                     </View>
                                                 </Card>
                                             )

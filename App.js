@@ -24,6 +24,8 @@ import DetailReminder from "./src/tampilan/it/DetailReminder";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TabBottom from "./src/component/TabBottom";
 import TabKeluhan from "./src/component/TabKeluhan";
+import TabBarang from "./src/component/TabBarang";
+import Detail from "./src/tampilan/admin/kelolabarang/Detail";
 
 
 const Stack = createNativeStackNavigator();
@@ -112,7 +114,8 @@ const App = () => {
               <Drawer.Screen name="TambahStaff" component={TambahStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
               {/* <Drawer.Screen name="VideoCall" component={VideoCall} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen> */}
               <Drawer.Screen name="EditStaff" component={EditStaff} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
-              <Drawer.Screen name="ManagementBarang" component={StockBarang} options={{
+              <Drawer.Screen name="detailBarang" component={Detail} options={{ drawerItemStyle: { display: "none" }, headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white" }}></Drawer.Screen>
+              <Drawer.Screen name="ManagementBarang" component={TabBarang} options={{
                 headerStyle: { backgroundColor: "#212529" }, headerTintColor: "white", drawerIcon: ({ color }) => (
                   <Feather name="box" size={22} color={color} />
                 )
@@ -133,12 +136,13 @@ const App = () => {
               <Drawer.Screen name="Dashboard" component={TabBottom} options={{
                 headerShown: false,
                 drawerIcon: ({ color }) => (
-                  <FontAwesome name="ticket" size={22} color={color} />
+                  <FontAwesome name="dashboard" size={22} color={color} />
+
                 )
               }} />
               <Drawer.Screen name="Reminder Keluhan" component={TabKeluhan} options={{
                 headerStyle: {
-                  backgroundColor: "#108EE9",
+                  backgroundColor: "#212529",
                 },
                 headerTintColor: "white",
                 drawerIcon: ({ color }) => (
@@ -157,31 +161,10 @@ const App = () => {
                 )
               }} />
               <Drawer.Screen name="Detail" component={DetailReminder} options={{
-                headerStyle: {
-                  backgroundColor: "#212529",
-                },
                 drawerItemStyle: {
                   display: "none"
                 },
-                headerTintColor: "white",
-                drawerIcon: ({ color }) => (
-                  <FontAwesome name="ticket" size={22} color={color} />
-                )
-              }} />
-              <Drawer.Screen name="Pengajuan Barang" component={PengajuanKeluhan} options={{
-                headerStyle: {
-                  backgroundColor: "#212529",
-                },
-                headerTintColor: "white",
-                drawerIcon: ({ color }) => (
-                  <FontAwesome name="ticket" size={22} color={color} />
-                )
-              }} />
-              <Drawer.Screen name="Laporan" component={PengajuanKeluhan} options={{
-                headerStyle: {
-                  backgroundColor: "#212529",
-                },
-                headerTintColor: "white",
+                headerTintColor: "black",
                 drawerIcon: ({ color }) => (
                   <FontAwesome name="ticket" size={22} color={color} />
                 )

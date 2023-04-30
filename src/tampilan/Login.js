@@ -18,7 +18,7 @@ const Login = () => {
         }
     }
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ImageBackground source={require('../../assets/images/background-login.jpg')} resizeMode="cover" style={[styles.background, { width: '100%', height: '100%' }]}>
                 <View style={styles.text}>
                     <Image source={require('../../assets/images/login-security.png')} style={[styles.opacityNormal, { width: 200, height: 200 }]} />
@@ -38,7 +38,7 @@ const Login = () => {
                     </View>
                 </View>
             </ImageBackground>
-        </View >
+        </SafeAreaView >
     )
 }
 

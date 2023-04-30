@@ -3,7 +3,8 @@ import { Card, Text } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { firebase } from '../../config/firebase';
 import { ScrollView } from "react-native-gesture-handler";
-import { View, Image } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const PengajuanBarang = () => {
     const [dataPengajuan, setDataPengajuan] = useState([]);
     const [barangPengajuan, setBarangPengajuan] = useState([]);
@@ -47,6 +48,7 @@ const PengajuanBarang = () => {
     }, [barangPengajuan])
     return (
         <View>
+            <ScrollView>
             {dataPengajuan.map((item, index) => {
                 const tanggal = new Date(item.date)
                 console.log("tgl:", tanggal);
@@ -93,12 +95,12 @@ const PengajuanBarang = () => {
                         break;
                 }
                 return (
-                    <View style={{ marginTop: 5 }}>
+                    <View style={{ marginTop: 15 }}>
                         <Text style={{ fontWeight: 'bold', marginLeft: "5%" }}>{date + " " + BulanString + " " + year}</Text>
                         {item.data.map((isi, indexIsi) => {
                             if (barangPengajuan[indexIsi] != undefined) {
                                 return (
-                                    <ScrollView>
+                                    <View style={{marginTop:10}}>
                                         <Card containerStyle={[{ borderRadius: 10 }]}>
                                             <View style={[{ flexDirection: "row" }]}>
                                                 <Image source={{ uri: `${barangPengajuan[indexIsi].foto}` }} style={{ aspectRatio: 1, width: 50 }} />
@@ -108,13 +110,29 @@ const PengajuanBarang = () => {
                                                 </View>
                                             </View>
                                         </Card>
-                                    </ScrollView>
+                                        <View style={{position:"absolute", width:"100%", bottom:-10}}>
+                                               <View style={{flexDirection:"row", justifyContent:"center", backgroundColor:"orange", width:"80%", marginLeft:"10%", padding:5, borderRadius:10,}}>
+                                                    <TouchableOpacity>
+                                                        <View style={{flexDirection:"row"}}>
+                                                            <MaterialCommunityIcons name="square-edit-outline" size={22}/>
+                                                            <Text>Edit</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity>
+                                                        <Text>TEST</Text>
+                                                    </TouchableOpacity>
+                                               </View>
+                                            </View>
+                                    </View>
+                                    
                                 )
                             }
                         })}
+                        
                     </View>
                 )
             })}
+            </ScrollView>
         </View>
     )
 }

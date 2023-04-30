@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text, StyleSheet, ImageBackground, Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { firebase } from "../../../config/firebase";
+import Feather from "react-native-vector-icons/Feather";
 
 const StockBarang = () => {
     const [barang, setBarang] = useState([]);
@@ -144,36 +146,46 @@ const StockBarang = () => {
 
 
     return (
-        <ScrollView>
-            <View style={[styles.container]}>
-                {
-                    barang.map((item, index) => {
-                        const getStockByID = stok.find((obj) => obj.idBarang == item.id);
-                        if (getStockByID == undefined) {
-                            return (
-                                <View key={item.id} style={[styles.card]}>
-                                    <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
-                                    <View style={[styles.backgroundText]}>
-                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
-                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{0}</Text>
+        <View style={{height:"100%", width:"100%"}}>
+            <ScrollView> 
+                <View style={[styles.container]}>
+                    {
+                        barang.map((item, index) => {
+                            const getStockByID = stok.find((obj) => obj.idBarang == item.id);
+                            if (getStockByID == undefined) {
+                                return (
+                                    <View key={item.id} style={[styles.card]}>
+                                        <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
+                                        <View style={[styles.backgroundText]}>
+                                            <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
+                                            <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{0}</Text>
+                                        </View>
                                     </View>
-                                </View>
-                            )
-                        } else if (getStockByID != undefined) {
-                            return (
-                                <View key={item.id} style={[styles.card]}>
-                                    <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
-                                    <View style={[styles.backgroundText]}>
-                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
-                                        <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{getStockByID.jumlah}</Text>
+                                )
+                            } else if (getStockByID != undefined) {
+                                return (
+                                    <View key={item.id} style={[styles.card]}>
+                                        <Image source={{ uri: `${item.foto}` }} style={[styles.borderImage, { width: "100%", height: 30 }]}></Image>
+                                        <View style={[styles.backgroundText]}>
+                                            <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{item.namaBarang}</Text>
+                                            <Text style={[styles.textCenter, { color: "#F27022", fontWeight: "bold" }]}>{getStockByID.jumlah}</Text>
+                                        </View>
                                     </View>
-                                </View>
-                            )
-                        }
-                    })
-                }
+                                )
+                            }
+                        })
+                    }
+                </View>
+            </ScrollView>
+            <View style={{justifyContent:"center", bottom:10}}>
+                <TouchableOpacity  style={{backgroundColor:"orange", width:"80%", marginLeft:"10%", padding:10, borderRadius:10}}>
+                    <View style={{flexDirection:"row", justifyContent:"center"}}>
+                        <Feather name="box" size={22} />
+                        <Text>Tambah Barang Baru</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
-        </ScrollView>
+        </View>
     )
 }
 

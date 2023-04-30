@@ -10,10 +10,13 @@ import PengajuanKeluhan from "../tampilan/staff umum/PengajuanKeluhan";
 import ReminderKeluhan from "../tampilan/it/ReminderKeluhan";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import PengajuanBarang from "../tampilan/it/PengajuanBarang";
+import StockBarang from "../tampilan/admin/kelolabarang/StockBarang";
+import BarangMasuk from "../tampilan/admin/kelolabarang/BarangMasuk";
+import BarangKeluar from "../tampilan/admin/kelolabarang/BarangKeluar";
 
 const Tab = createMaterialTopTabNavigator();
 
-const TabKeluhan = () => {
+const TabBarang = () => {
     return (
         <Tab.Navigator
             tabBarOptions={{
@@ -22,17 +25,18 @@ const TabKeluhan = () => {
                 style: { backgroundColor: '#212529' }
             }}
         >
-            <Tab.Screen name="ReminderKeluhan" component={ReminderKeluhan} options={{
-                headerShown: false, tabBarLabel: 'Tugas'
-            }}>
-            </Tab.Screen>
-            <Tab.Screen name="PengajuanBarang" component={PengajuanBarang} options={{
-                tabBarLabel: 'Barang'
-            }}>
-            </Tab.Screen>
+            <Tab.Screen name="Stok" component={StockBarang} options={{
+                headerShown: false, tabBarLabel: 'Stok'
+            }}></Tab.Screen>
+            <Tab.Screen name="BarangMasuk" component={BarangMasuk} options={{
+                headerShown: false, tabBarLabel: 'Barang Masuk'
+            }}></Tab.Screen>
+            <Tab.Screen name="BarangKeluar" component={BarangKeluar} options={{
+                headerShown: false, tabBarLabel: 'Barang Keluar'
+            }}></Tab.Screen>
         </Tab.Navigator>
 
     )
 }
 
-export default TabKeluhan;
+export default TabBarang;

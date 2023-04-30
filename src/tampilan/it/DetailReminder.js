@@ -1,7 +1,9 @@
 import react, { useEffect, useState } from "react";
-import { SafeAreaView, Image, StyleSheet, View, Text, TouchableHighlight, ImageBackground } from "react-native";
+import { SafeAreaView, Image, StyleSheet, View, Text, TouchableHighlight, ImageBackground, TouchableOpacity } from "react-native";
 import { firebase } from '../../config/firebase';
 import CountdownTimer from "../../component/CountdownTimer";
+import { Card } from "react-native-elements";
+import { ScrollView } from "react-native-gesture-handler";
 
 const DetailReminder = ({ route, navigation }) => {
     const [keluhan, setKeluhan] = useState([]);
@@ -45,7 +47,7 @@ const DetailReminder = ({ route, navigation }) => {
 
         return (
             <View>
-                <Text style={[{ color: "#F23C3C", fontSize: 20 }]}>{formatTime(timeRemaining)}</Text>
+                <Text style={[{ color: "#F23C3C", fontSize: 15 }]}>{formatTime(timeRemaining)}</Text>
             </View>
         );
     };
@@ -53,6 +55,7 @@ const DetailReminder = ({ route, navigation }) => {
     useEffect(() => {
         firebase.firestore().collection('keluhan').doc(route.params.id).onSnapshot((snapshots) => {
             setKeluhan([snapshots.data()]);
+            console.log(snapshots.data());
         })
     }, [route.params.id])
 
@@ -85,32 +88,144 @@ const DetailReminder = ({ route, navigation }) => {
     }
 
     return (
-        <View>
-            <ImageBackground source={require('../../../assets/images/background-detail.jpg')} resizeMode="cover" style={[styles.background, { width: '100%', height: '100%' }]}>
-                <View style={[{ position: "absolute", width: "100%" }]}>
-                    <Image source={{ uri: 'https://sekawantriasa.com/wp-content/uploads/2021/08/Esa-Unggul-Tangerang.jpg' }} style={{ width: '100%', height: '50%', top: 0 }} />
-                    {keluhan.map((item, index) => {
-                        return (
-                            <>
-                                <View style={[styles.backgroundWhite, styles.container, { marginTop: 20, borderRadius: 23 }]}>
-                                    <Text style={[styles.bold, styles.textCenter, { color: "#F23C3C", fontSize: 30 }]}>{item.judulKeluhan}</Text>
-                                    <Text style={[styles.bold, styles.textCenter]}><CountdownTimer initialTime={waktuDibuat - timestamp} /></Text>
-                                </View>
-                                <View style={[styles.backgroundWhite, styles.container, { marginTop: 20, marginBottom: 30 }]}>
-                                    <View style={{ padding: 20 }}>
-                                        <Text style={[styles.bold, styles.sizeLaporan]}>Detail Laporan</Text>
-                                        <Text style={styles.sizeLaporan}>Nama    : {nama}</Text>
-                                        <Text style={styles.sizeLaporan}>Tanggal : 25-08-2022</Text>
-                                        <Text style={styles.sizeLaporan}>Status  : {item.status}</Text>
-                                        <Text style={styles.sizeLaporan}>Keluhan : {item.keluhan}</Text>
-                                    </View>
-                                </View>
-                            </>
-                        )
-                    })}
-                    <TouchableHighlight onPress={batalkan} style={[styles.button, styles.container, { backgroundColor: "#FE1919", paddingTop: 10, paddingBottom: 10, width: "60%", marginLeft: "20%" }]}><Text style={[styles.textCenter, { fontSize: 22, color: "#ffffff" }]}>Batalkan</Text></TouchableHighlight>
+        <View style={{backgroundColor:"white", width:"100%", height:"100%"}}>
+                <Image source={{ uri: 'https://sekawantriasa.com/wp-content/uploads/2021/08/Esa-Unggul-Tangerang.jpg' }} style={{ width: '100%', height: 200, top: 0 }} />
+                <ScrollView style={{padding:20}}>
+    {keluhan.map((item, index)=>{
+        const tanggalDibuat = new Date(item.createdAt.seconds * 1000);
+        const waktu = tanggalDibuat.getHours()+":"+tanggalDibuat.getMinutes()+":"+tanggalDibuat.getSeconds();
+        const tanggal = tanggalDibuat.getDate();
+        const bulan = tanggalDibuat.getMonth();
+        let BulanString = '';
+        switch (bulan) {
+            case 0:
+                BulanString = "January";
+                break;
+            case 1:
+                BulanString = "Febuary";
+                break;
+            case 2:
+                BulanString = "Maret";
+                break;
+            case 3:
+                BulanString = "April";
+                break;
+            case 4:
+                BulanString = "Mei";
+                break;
+            case 5:
+                BulanString = "Juni";
+                break;
+            case 6:
+                BulanString = "Juli";
+                break;
+            case 7:
+                BulanString = "Agustus";
+                break;
+            case 8:
+                BulanString = "September";
+                break;
+            case 9:
+                BulanString = "Oktober";
+                break;
+            case 10:
+                BulanString = "November";
+                break;
+            case 11:
+                BulanString = "Desember";
+                break;
+        }
+        const tahun = tanggalDibuat.getFullYear();
+
+        const tanggalDeadline = new Date(item.deadline.seconds * 1000);
+        const waktuDeadline = tanggalDeadline.getHours()+":"+tanggalDeadline.getMinutes()+":"+tanggalDeadline.getSeconds();
+        const tanggalD = tanggalDeadline.getDate();
+        const bulanDeadline = tanggalDeadline.getMonth();
+        let BulanStringDeadline = '';
+        switch (bulanDeadline) {
+            case 0:
+                BulanStringDeadline = "January";
+                break;
+            case 1:
+                BulanStringDeadline = "Febuary";
+                break;
+            case 2:
+                BulanStringDeadline = "Maret";
+                break;
+            case 3:
+                BulanStringDeadline = "April";
+                break;
+            case 4:
+                BulanStringDeadline = "Mei";
+                break;
+            case 5:
+                BulanStringDeadline = "Juni";
+                break;
+            case 6:
+                BulanStringDeadline = "Juli";
+                break;
+            case 7:
+                BulanStringDeadline = "Agustus";
+                break;
+            case 8:
+                BulanStringDeadline = "September";
+                break;
+            case 9:
+                BulanStringDeadline = "Oktober";
+                break;
+            case 10:
+                BulanStringDeadline = "November";
+                break;
+            case 11:
+                BulanStringDeadline = "Desember";
+                break;
+        }
+        const tahunDeadline = tanggalDeadline.getFullYear();
+
+          return(
+            <View style={{flexDirection:"column"}}>
+                <View style={[{flexDirection:"row", justifyContent:"space-between"}]}>
+                    <View style={{backgroundColor:"green", padding:5, borderRadius:10}}>
+                        <Text style={{fontWeight:"bold", color:"white"}}>{item.judulKeluhan}</Text>
+                    </View>
+                    <Text><CountdownTimer initialTime={waktuDibuat - timestamp} /></Text>
                 </View>
-            </ImageBackground>
+                <View style={{width:"100%", borderColor:"#000", borderWidth:1, marginTop:5}}></View>
+                <View style={[{flexDirection:"row", justifyContent:"space-between", marginTop:10}]}>
+                    <Text>Pengaju : </Text>
+                    <Text>{nama}</Text>
+                </View>
+                <View style={[{flexDirection:"row", justifyContent:"space-between"}]}>
+                    <Text>Diajukan Pada tanggal : </Text>
+                    <Text>{tanggal+" "+BulanString+" "+tahun+", "+waktu}</Text>
+                </View>
+                <View style={[{flexDirection:"row", justifyContent:"space-between"}]}>
+                    <Text>Deadline : </Text>
+                    <Text>{tanggalD+" "+BulanStringDeadline+" "+tahunDeadline+", "+waktuDeadline}</Text>
+                </View>
+                <View style={[{flexDirection:"row", justifyContent:"space-between"}]}>
+                    <Text>Status : </Text>
+                    <Text>{item.status}</Text>
+                </View>
+                <View style={[{flexDirection:"row", justifyContent:"space-between", marginTop:30}]}>
+                    <View style={{backgroundColor:"green", padding:5, borderRadius:10}}>
+                        <Text style={{fontWeight:"bold", color:"white"}}>Keluhan</Text>
+                    </View>
+                </View>
+                <View style={{width:"100%", borderColor:"#000", borderWidth:1, marginTop:5}}></View>
+                <View><Text>{item.keluhan}</Text></View>
+                <View style={{flexDirection:"row", justifyContent:"flex-end",marginTop:30}}>
+                    <TouchableOpacity style={{backgroundColor:"green", marginRight:5, padding:10, borderRadius:10}}>
+                        <Text style={{color:"white"}}>Tunda</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{backgroundColor:"#108EE9", padding:10, borderRadius:10,}}>
+                        <Text style={{color:"white"}}>Kerjakan</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    })}
+    </ScrollView>
         </View>
     )
 }
@@ -118,6 +233,15 @@ const DetailReminder = ({ route, navigation }) => {
 export default DetailReminder;
 
 const styles = StyleSheet.create({
+    modal:{
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        backgroundColor: 'white',
+        padding: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
     sizeLaporan: {
         fontSize: 20
     },
